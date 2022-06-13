@@ -15,9 +15,10 @@ router.post('/createuser', [
 ],
     async (req, res) => {
         //if there are errors, return bad request and the errors
+        let success = false;    //success flag to track whether user created or not for the frontend
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ success, errors: errors.array() });
         }
 
         //check whether the user with this email id already exists 
@@ -45,7 +46,8 @@ router.post('/createuser', [
             }
             //creating authorization token
             const authToken = jwt.sign(paylod, JWT_SECRET);
-            res.json({ authToken });
+            success = true;
+            res.json({ success, authToken });
         } catch (error) {
             console.error(error.message);
             res.status(400).send("internal server occured");
@@ -65,14 +67,15 @@ router.post('/login', [
     }
     const { email, password } = req.body;
 
+    let success = false;
     //otherwise go ahead
     try {
         let user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ error: "incorrect credentials" });
+        if (!user) return res.status(400).json({ success, error: "incorrect credentials" });
 
         const pwdCompare = await bcrypt.compare(password, user.password);
         if (!pwdCompare) {
-            return res.status(400).json({ error: "incorrect credentials" })
+            return res.status(400).json({ success, error: "incorrect credentials" })
         }
         const paylod = {
             user: {
@@ -81,7 +84,8 @@ router.post('/login', [
         }
         //jwt
         const authToken = jwt.sign(paylod, JWT_SECRET);
-        res.json(authToken);
+        success = true;
+        res.json({ success, authToken });
 
     } catch (error) {
         console.error(error.message);
@@ -92,10 +96,12 @@ router.post('/login', [
 
 //ROUTE:3--------------get logged in user details using POST "api/auth/getuser". login required
 router.post('/getuser', fetchuser, async (req, res) => {
+    let success = false;
     try {
         let userId = req.user.id;
         const user = await User.findById(userId).select("-password");
-        res.send(user);
+        success = true;
+        res.send({ success, user });
     } catch (error) {
         console.error(error.message);
         res.status(500).send("internal server error");
