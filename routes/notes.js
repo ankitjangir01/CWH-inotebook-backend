@@ -22,6 +22,7 @@ router.post('/addnote', fetchuser, [
     body('title', 'name must be at least 3 characters long').isLength({ min: 3 }),
     body('description', 'description must be longer than 5 characters').isLength({ min: 5 })
 ], async (req, res) => {
+    let success = false;
     try {
         const { title, description, tag } = req.body;
         //if there are errors do not proceed further
@@ -34,7 +35,8 @@ router.post('/addnote', fetchuser, [
         })
         //.save() function returns a promise
         const savedNote = await note.save();
-        res.json({ savedNote });
+        success = true;
+        res.json({success, savedNote });
     }
     catch (error) {
         console.error(error.message);
@@ -46,6 +48,7 @@ router.post('/addnote', fetchuser, [
 //ROUTE-3: update an existing note using: PUT "api/notes/updatenote"  ----------------login required
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
     try {
+        let success = false;    //success flag for frontend
         const { title, description, tag } = req.body;
 
         //defining new note and entering the values based on if user want to update the values or not
@@ -67,7 +70,8 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
 
         //update the note with newNote
         note = await Note.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
-        res.json({ note });
+        success = true;
+        res.json({ success, note });
     }
     catch (error) {
         console.error(error.message);
@@ -80,6 +84,7 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
 router.delete('/deletenote/:id', fetchuser, async (req, res) => {
     try {
         //find the note to be deleted and delete it
+        let success = false;
         let note = await Note.findById(req.params.id);
         if (!note) {
             return res.status(404).send("Note not found");
@@ -91,7 +96,8 @@ router.delete('/deletenote/:id', fetchuser, async (req, res) => {
 
         //delete the note
         note = await Note.findByIdAndDelete(req.params.id);
-        res.json({ "Success": "Note has been deleted" });
+        success = true;
+        res.json({ success });
     }
     catch (error) {
         console.error(error.message);
