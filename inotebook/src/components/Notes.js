@@ -15,7 +15,8 @@ const Notes = () => {
     useEffect(() => {
         //if user not logged in then do not render the notes and redirect to login page
         if (localStorage.getItem('authtoken')) {
-            console.log('notes fetched----------')
+            const temp = process.env.MONGO_URI;
+            console.log(temp)
             return () => {
                 fetchAllNotes();
             }

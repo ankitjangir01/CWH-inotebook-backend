@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const host = "http://localhost:5000";
+const host = process.env.REACT_APP_HOST;
+const port = process.env.PORT || 5000;
 
 const Signup = () => {
 
@@ -16,7 +17,7 @@ const Signup = () => {
     const handleSignupBtn = async (e) => {
         e.preventDefault();
         //hit the api for creating new user
-        const response = await fetch(`${host}/api/auth/createuser`, {
+        const response = await fetch(`${host}:${port}/api/auth/createuser`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',

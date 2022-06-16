@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const host = "http://localhost:5000";
+const host = process.env.REACT_APP_HOST;
+const port = process.env.PORT || 5000;
 
 const Login = () => {
 
@@ -12,7 +13,7 @@ const Login = () => {
     const handleLoginBtn = async (e) => {
         e.preventDefault();
         //api call to login
-        const response = await fetch(`${host}/api/auth/login`, {
+        const response = await fetch(`${host}:${port}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
