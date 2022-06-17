@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-const host = process.env.REACT_APP_HOST;
-const port = process.env.PORT || 5000;
 
 const Navbar = () => {
   const loc = useLocation();
@@ -9,7 +7,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const getUserDetails = async () => {
-    const res = await fetch(`${host}:${port}/api/auth/getuser`, {
+    const res = await fetch(`/api/auth/getuser`, {
       method: 'POST',
       headers: {
         'auth-token': localStorage.getItem('authtoken'),

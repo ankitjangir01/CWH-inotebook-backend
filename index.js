@@ -11,9 +11,9 @@ app.use(cors());
 app.use(express.json());
 
 //availbale routes
-app.get('/', (req,res)=>{
-  res.sendFile('./inotebook/build/index.html');
-})
+// app.get('/', (req,res)=>{
+//   res.sendFile('./inotebook/build/index.html');
+// })
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/notes', require('./routes/notes'))
 
